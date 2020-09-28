@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,19 +48,24 @@ public class DetailActivity extends AppCompatActivity {
                     CandyEntry.COLUMN_NAME_DESC));
 
 
-            TextView textView = (TextView) this.findViewById(R.id.text_view_name);
+            TextView textView = findViewById(R.id.text_view_name);
             textView.setText(candyName);
 
-            TextView textViewPrice = (TextView) this.findViewById(R.id.text_view_price);
+            TextView textViewPrice = findViewById(R.id.text_view_price);
             textViewPrice.setText(candyPrice);
 
-            TextView textViewDesc = (TextView) this.findViewById(R.id.text_view_desc);
+            TextView textViewDesc = findViewById(R.id.text_view_desc);
             textViewDesc.setText(candyDesc);
 
-            ImageView imageView = (ImageView) this.findViewById(
-                    R.id.image_view_candy);
+            ImageView imageView = findViewById(R.id.image_view_candy);
             Picasso.with(this).load(mCandyImageUrl).into(imageView);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        createShareIntent();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -68,7 +75,10 @@ public class DetailActivity extends AppCompatActivity {
         return true;
     }
 
-    // ***
-    // TODO - Task 4 - Share the Current Candy with an Intent
-    // ***
+    private void createShareIntent(){
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, SHARE_DESCRIPTION + mCandyImageUrl + HASHTAG_CANDYCODED);
+        startActivity(shareIntent);
+    }
 }
